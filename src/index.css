@@ -1,0 +1,37 @@
+:root {
+  --bg: #f3f0ff;
+  --bg2: #e9f5ff;
+  --card: #ffffff;
+  --ink: #2a2350;
+  --muted: #7b7596;
+  --primary: #6c5ce7;
+  --primary-d: #5a4bd1;
+  --accent: #ff7aa8;
+  --green: #1bbf7a;
+  --green-bg: #e3f9ef;
+  --red: #ff5a78;
+  --red-bg: #ffe7ec;
+  --gold: #ffb800;
+  --shadow: 0 8px 24px rgba(108, 92, 231, 0.14);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Nunito", "PingFang SC", "Microsoft YaHei", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--bg), var(--bg2));
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; cursor: pointer; }
+
+h1, h2, h3 { line-height: 1.2; }
