@@ -54,6 +54,27 @@ export function touchStreak(state) {
   return { ...state, streak: { count, lastDay: t } };
 }
 
+// Combine local + cloud progress so signing in never loses learning from either side.
+// Strategy: keep the richer record (more questions answered) as the base, then union
+// the things that should only ever grow — seen questions, badges, best score, xp.
+export function mergeProgress(a, b) {
+  if (!a) return b ? { ...DEFAULT, ...b } : { ...DEFAULT };
+  if (!b) return { ...DEFAULT, ...a };
+  const answered = (s) => Object.values(s.topics || {}).reduce((n, t) => n + (t.total || 0), 0);
+  const base = answered(a) >= answered(b) ? a : b;
+  const seenA = (a.practice && a.practice.seenIds) || [];
+  const seenB = (b.practice && b.practice.seenIds) || [];
+  return {
+    ...DEFAULT,
+    ...base,
+    xp: Math.max(a.xp || 0, b.xp || 0),
+    bestScore: Math.max(a.bestScore || 0, b.bestScore || 0),
+    badges: [...new Set([...(a.badges || []), ...(b.badges || [])])],
+    streak: (a.streak?.count || 0) >= (b.streak?.count || 0) ? a.streak : b.streak,
+    practice: { seenIds: [...new Set([...seenA, ...seenB])] }
+  };
+}
+
 // Mark one question id as practiced so we can resume there next session.
 export function markSeen(state, id) {
   const prev = state.practice || { seenIds: [] };

@@ -1,7 +1,7 @@
 import { UI } from "../lib/i18n.js";
 import { levelProgress } from "../lib/game.js";
 
-export default function Header({ progress, lang, onToggleLang, onHome }) {
+export default function Header({ progress, lang, onToggleLang, onHome, cloudEnabled, user, onSignIn, onSignOut }) {
   const t = UI[lang];
   const lp = levelProgress(progress.xp);
   return (
@@ -26,6 +26,21 @@ export default function Header({ progress, lang, onToggleLang, onHome }) {
         <button className="lang-toggle header-lang" onClick={onToggleLang}>
           {lang === "en" ? "中文" : "EN"}
         </button>
+        {cloudEnabled && (
+          user ? (
+            <button className="sync-btn signed-in" onClick={onSignOut} title={user.email || ""}>
+              {user.photoURL
+                ? <img className="avatar" src={user.photoURL} alt="" referrerPolicy="no-referrer" />
+                : <span className="avatar avatar-fallback">{(user.displayName || "?")[0]}</span>}
+              <span className="sync-label">{t.signOut}</span>
+            </button>
+          ) : (
+            <button className="sync-btn" onClick={onSignIn}>
+              <span className="g-mark">G</span>
+              <span className="sync-label">{t.signIn}</span>
+            </button>
+          )
+        )}
       </div>
     </header>
   );

@@ -7,6 +7,7 @@ import Exam from "./components/Exam.jsx";
 import Review from "./components/Review.jsx";
 import * as storage from "./lib/storage.js";
 import { newlyEarned, badgeById } from "./lib/game.js";
+import * as cloud from "./lib/firebase.js";
 import "./App.css";
 
 export default function App() {
@@ -14,9 +15,31 @@ export default function App() {
   const [view, setView] = useState("home"); // home | practice | exam | review
   const [subject, setSubject] = useState("math");
   const [initialTopic, setInitialTopic] = useState("all");
+  const [user, setUser] = useState(null); // signed-in Google user, or null
 
-  // Persist on every change.
+  // Persist locally on every change.
   useEffect(() => storage.save(progress), [progress]);
+
+  // When signed in, mirror progress to the cloud (debounced) so other devices get it.
+  useEffect(() => {
+    if (!user) return;
+    const id = setTimeout(() => cloud.pushProgress(user.uid, progress), 800);
+    return () => clearTimeout(id);
+  }, [progress, user]);
+
+  // Track Google sign-in. On login, merge cloud + local so nothing is lost, then sync.
+  useEffect(() => {
+    return cloud.watchAuth(async (u) => {
+      setUser(u);
+      if (!u) return;
+      const remote = await cloud.pullProgress(u.uid);
+      setProgress((local) => {
+        const merged = storage.mergeProgress(local, remote);
+        cloud.pushProgress(u.uid, merged);
+        return merged;
+      });
+    });
+  }, []);
 
   const lang = progress.lang;
   const toggleLang = () =>
@@ -80,7 +103,16 @@ export default function App() {
 
   return (
     <div className="app">
-      <Header progress={progress} lang={lang} onToggleLang={toggleLang} onHome={goHome} />
+      <Header
+        progress={progress}
+        lang={lang}
+        onToggleLang={toggleLang}
+        onHome={goHome}
+        cloudEnabled={cloud.cloudEnabled}
+        user={user}
+        onSignIn={() => cloud.signInWithGoogle()}
+        onSignOut={() => cloud.signOutUser()}
+      />
       <main className="content">
         {view === "home" && (
           <Home

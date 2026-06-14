@@ -64,7 +64,9 @@ export const UI = {
     practiceProgress: "Done",
     resumeNote: "Resuming where you left off yesterday",
     restart: "Start over",
-    allDone: "You've gone through every question here! 🎉 Start over to review."
+    allDone: "You've gone through every question here! 🎉 Start over to review.",
+    signIn: "Sign in",
+    signOut: "Sign out"
   },
   zh: {
     appName: "CSCA 闯关",
@@ -129,7 +131,9 @@ export const UI = {
     practiceProgress: "已完成",
     resumeNote: "继续昨天的进度",
     restart: "重新开始",
-    allDone: "这里的题目你都做完啦！🎉 可以重新开始复习。"
+    allDone: "这里的题目你都做完啦！🎉 可以重新开始复习。",
+    signIn: "登录",
+    signOut: "退出"
   }
 };
 
