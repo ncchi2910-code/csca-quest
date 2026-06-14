@@ -31,11 +31,12 @@ export default function App() {
   );
 
   // Apply a single practice answer; returns newly earned badge objects for toasts.
-  function applyAnswer({ topic, isCorrect, xpGained, maxCombo }) {
+  function applyAnswer({ id, topic, isCorrect, xpGained, maxCombo }) {
     let earned = [];
     setProgress((p) => {
       let next = { ...p, xp: p.xp + xpGained };
       next = storage.recordTopic(next, topic, isCorrect);
+      next = storage.markSeen(next, id);
       next = storage.touchStreak(next);
       const ids = newlyEarned(next, { maxCombo });
       if (ids.length) next = { ...next, badges: [...next.badges, ...ids] };
@@ -97,8 +98,10 @@ export default function App() {
             pool={pool}
             initialTopic={initialTopic}
             lang={lang}
+            seenIds={progress.practice?.seenIds || []}
             onToggleLang={toggleLang}
             applyAnswer={applyAnswer}
+            onResetProgress={() => setProgress((p) => storage.resetSeen(p))}
             onExit={goHome}
           />
         )}

@@ -8,7 +8,8 @@ const DEFAULT = {
   streak: { count: 0, lastDay: null }, // lastDay = "YYYY-MM-DD"
   topics: {}, // topicKey -> { correct, total }
   badges: [], // earned badge ids
-  bestScore: 0 // best mock-exam score
+  bestScore: 0, // best mock-exam score
+  practice: { seenIds: [] } // ids of questions already practiced — used to resume
 };
 
 export function load() {
@@ -51,6 +52,18 @@ export function touchStreak(state) {
   let count = 1;
   if (last && daysBetween(last, t) === 1) count = state.streak.count + 1;
   return { ...state, streak: { count, lastDay: t } };
+}
+
+// Mark one question id as practiced so we can resume there next session.
+export function markSeen(state, id) {
+  const prev = state.practice || { seenIds: [] };
+  if (!id || prev.seenIds.includes(id)) return state;
+  return { ...state, practice: { ...prev, seenIds: [...prev.seenIds, id] } };
+}
+
+// Clear practice progress so the player can start the pool over.
+export function resetSeen(state) {
+  return { ...state, practice: { seenIds: [] } };
 }
 
 // Record one answered question into per-topic stats.
