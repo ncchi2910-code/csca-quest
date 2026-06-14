@@ -13,12 +13,12 @@ import {
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const config = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyB39hVWGFJ12FseimRlUROWhK2oa8jhAiM",
+  authDomain: "csca-a9169.firebaseapp.com",
+  projectId: "csca-a9169",
+  storageBucket: "csca-a9169.firebasestorage.app",
+  messagingSenderId: "666386506593",
+  appId: "1:666386506593:web:ccfcdade00a85577d05b20"
 };
 
 // Cloud sync is only active once the Firebase project keys are configured.
